@@ -3,24 +3,22 @@
 import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-const Header = () => {
+function Header() {
+  const { data } = useSession();
 
-  const {data}=useSession();
-
-  useEffect(()=>{
+  useEffect(() => {
     console.log(data);
-  },[data])
-
-  if(data){
-    if(data.user){
-      console.log(data.user);
-      
-  }
-  }
-
-
+  }, [data]);
 
   return (
     <div className="p-5 shadow-sm flex justify-between">
@@ -53,10 +51,31 @@ const Header = () => {
 
       {/* Button Section */}
       <div>
-        <Button onClick={() =>signIn('descope')}> Login / Sign Up</Button>
+        {data?.user ? (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              {" "}
+              <Image
+                src={data?.user?.image}
+                alt="profile"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>My Booking</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => signOut()}>Logout</DropdownMenuItem> 
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <Button onClick={() => signIn("descope")}> Login / Sign Up</Button>
+        )}
       </div>
     </div>
   );
-};
+}
 
 export default Header;
