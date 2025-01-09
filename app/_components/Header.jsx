@@ -1,8 +1,27 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { signIn, useSession } from "next-auth/react";
 
 const Header = () => {
+
+  const {data}=useSession();
+
+  useEffect(()=>{
+    console.log(data);
+  },[data])
+
+  if(data){
+    if(data.user){
+      console.log(data.user);
+      
+  }
+  }
+
+
+
   return (
     <div className="p-5 shadow-sm flex justify-between">
       <div className="flex items-center gap-8">
@@ -34,7 +53,7 @@ const Header = () => {
 
       {/* Button Section */}
       <div>
-        <Button>Get Started</Button>
+        <Button onClick={() =>signIn('descope')}> Login / Sign Up</Button>
       </div>
     </div>
   );
